@@ -1,0 +1,62 @@
+ #!/bin/bash
+
+##################################################################
+#
+#  Update Local Repo(sitory)
+#
+#  Jason Bowman (bowmanjc)
+#  24 October 2020
+#
+#  Purpose: This bash script provides an easy tool to update your
+#           local repository after downloading an rpm package file.
+#
+#           Place this script in: /usr/local/sbin/
+#
+#           This version stores rpms under /var/www/html incase you
+#           later want to publish using apache or nginx to other
+#           machines in your network.
+#
+#  Dependencies: This script requires createrepo, uname, & lsb_release
+#           in order to execute. In order to use the local repo, you
+#           will need yum/dnf & you will need to add/create a
+#           local.repo file. I suggest creating file
+#           "/etc/yum.repos.d/local.repo" and in it insert (modify as 
+#           necessary):
+#
+#           [updates-local]
+#           name=[Fedora/CentOS/RHEL/etc.] $releasever - $basearch - Local Updates
+#           failovermethod=priority
+#           baseurl=file:///var/www/html/[fedora,centos,etc]/updates/$releasever/$basearch/
+#           enabled=1
+#           gpgcheck=0
+#
+#  License: GNU GPLv3
+#
+##################################################################
+
+OS=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
+BASE="/var/www/html/"$OS"/updates"
+VER=$(lsb_release -sr)
+ARCH=$(uname -m)
+
+[ -d $BASE/$VER/$ARCH ] || mkdir -p $BASE/$VER/$ARCH
+
+if [ -z $SUDO_USER ]
+then
+    if [ -z $HOME ]
+    then
+        echo "[!] Error: Unable to determine directory to retrieve rpm packages"
+        exit 1
+    else
+        mv -v $HOME/Downloads/*.rpm $BASE/$VER/$ARCH 2> /dev/null
+    fi
+else
+    mv -v /home/$SUDO_USER/Downloads/*.rpm $BASE/$VER/$ARCH 2> /dev/null
+fi
+
+cd $BASE/$VER/$ARCH
+chown -c root:root *.rpm
+chmod -c 644 *.rpm
+createrepo $BASE/$VER/$ARCH
+
+exit 0
