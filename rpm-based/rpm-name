@@ -1,0 +1,31 @@
+#!/bin/bash
+
+##################################################################
+#
+#  RPM File Rename (rpm-name)
+#
+#  Jason Bowman (bowmanjc)
+#  15 November 2020
+#
+#  Purpose: This bash script provides an easy tool to update an
+#           rpm package filename based on the following info
+#           embedded inside the rpm package:
+#
+#           <package>_<version>_<architecture>.rpm
+#
+#           Place this script in: /usr/local/bin/
+#
+#           Usage: rpm-name <file>.rpm
+#
+#           This script provides the same basic functionality and
+#           is inspired by dpkg-name. As this currently does not
+#           provide any sanity checking against the incoming file,
+#           only use against actual rpm packages.
+#
+#  Dependencies: This script requires mv & rpm in order to execute.
+#
+#  License: GNU GPLv3
+#
+##################################################################
+
+mv -vi $1 $(rpm -qp --nosignature $1).rpm
