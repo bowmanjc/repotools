@@ -5,14 +5,14 @@
 #  Update Local Repo(sitory)
 #
 #  Jason Bowman (bowmanjc)
-#  01 July 2020
+#  06 November 2020
 #
 #  Purpose: This bash script provides an easy tool to update your
 #           local repository after downloading a deb package file.
 #
 #           Place this script in: /usr/local/sbin/
 #
-#  Dependencies: This script requires dpkg-scanpackages (dpkg) in
+#  Dependencies: This script requires dpkg-scanpackages & dpkg-name in
 #           order to execute. In order to use the local repo, you
 #           will need apt/apt-get & you will need to add/create a
 #           sources.list file. I suggest creating file
@@ -40,6 +40,7 @@ else
 fi
 
 cd /usr/local/repo
+dpkg-name *.deb
 chown -c root:root *.deb
 chmod -c 644 *.deb
 dpkg-scanpackages -m . /dev/null | gzip -9c > Packages.gz
