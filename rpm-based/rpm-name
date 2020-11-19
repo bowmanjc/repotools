@@ -5,7 +5,7 @@
 #  RPM File Rename (rpm-name)
 #
 #  Jason Bowman (bowmanjc)
-#  15 November 2020
+#  19 November 2020
 #
 #  Purpose: This bash script provides an easy tool to update an
 #           rpm package filename based on the following info
@@ -15,17 +15,24 @@
 #
 #           Place this script in: /usr/local/bin/
 #
-#           Usage: rpm-name <file>.rpm
+#           Usage: rpm-name <arbitrary_filename>
 #
 #           This script provides the same basic functionality and
-#           is inspired by dpkg-name. As this currently does not
-#           provide any sanity checking against the incoming file,
+#           is inspired by dpkg-name. While this script does
+#           basic sanity checking against the incoming file,
 #           only use against actual rpm packages.
 #
-#  Dependencies: This script requires mv & rpm in order to execute.
+#  Dependencies: This script requires file & rpm in order to execute.
 #
 #  License: GNU GPLv3
 #
 ##################################################################
 
-mv -vi $1 $(rpm -qp --nosignature $1).rpm
+if [[ $(file --mime-type -b "$1") == application/x-rpm ]]; then
+   mv -vi $1 $(rpm -qp --nosignature $1).rpm
+   exit 0
+else
+   echo "[!] Error: $1 is not an rpm package"
+   exit 1
+fi
+

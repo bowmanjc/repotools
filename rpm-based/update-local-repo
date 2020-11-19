@@ -2,10 +2,10 @@
 
 ##################################################################
 #
-#  Update Local Repo(sitory)
+#  Update Local Repository (update-local-repo)
 #
 #  Jason Bowman (bowmanjc)
-#  24 October 2020
+#  19 November 2020
 #
 #  Purpose: This bash script provides an easy tool to update your
 #           local repository after downloading an rpm package file.
@@ -29,6 +29,7 @@
 #           baseurl=file:///var/www/html/[fedora,centos,etc]/updates/$releasever/$basearch/
 #           enabled=1
 #           gpgcheck=0
+#           metadata_expire=60
 #
 #  License: GNU GPLv3
 #
