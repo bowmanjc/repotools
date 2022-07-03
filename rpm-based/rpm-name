@@ -5,34 +5,37 @@
 #  RPM File Rename (rpm-name)
 #
 #  Jason Bowman (bowmanjc)
-#  19 November 2020
+#  03 July 2022
 #
-#  Purpose: This bash script provides an easy tool to update an
-#           rpm package filename based on the following info
+#  Purpose: This bash script provides an easy tool to update
+#           rpm package filenames based on the following info
 #           embedded inside the rpm package:
 #
 #           <package>_<version>_<architecture>.rpm
 #
 #           Place this script in: /usr/local/bin/
 #
-#           Usage: rpm-name <arbitrary_filename>
+#           Usage: rpm-name <arbitrary_rpm_filenames>
 #
-#           This script provides the same basic functionality and
-#           is inspired by dpkg-name. While this script does
-#           basic sanity checking against the incoming file,
-#           only use against actual rpm packages.
+#           This script provides the same basic functionality as,
+#           and is inspired by dpkg-name. While this script does
+#           basic sanity checking against the incoming files,
+#           it is recommended only to use against actual rpm
+#           packages.
 #
-#  Dependencies: This script requires file & rpm in order to execute.
+#  Dependencies: This script requires file & rpm in order to
+#                execute.
 #
 #  License: GNU GPLv3
 #
 ##################################################################
 
-if [[ $(file --mime-type -b "$1") == application/x-rpm ]]; then
-   mv -vi $1 $(rpm -qp --nosignature $1).rpm
-   exit 0
-else
-   echo "[!] Error: $1 is not an rpm package"
-   exit 1
-fi
-
+for rpmfile in "$@"
+do
+   if [[ $(file --mime-type -b "$rpmfile") == application/x-rpm ]]; then
+      mv -vi $rpmfile $(rpm -qp --nosignature $rpmfile).rpm
+   else
+      echo "[!] Warning: $rpmfile is not an rpm package. Skipping."
+   fi
+done
+exit 0
