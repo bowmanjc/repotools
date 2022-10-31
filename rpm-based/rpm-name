@@ -33,7 +33,8 @@
 for rpmfile in "$@"
 do
    if [[ $(file --mime-type -b "$rpmfile") == application/x-rpm ]]; then
-      mv -vi $rpmfile $(rpm -qp --nosignature $rpmfile).rpm
+      # had to switch from (i)nteractive to (f)orce to use in ansible playbook
+      mv -vf $rpmfile $(rpm -qp --nosignature $rpmfile).rpm
    else
       echo "[!] Warning: $rpmfile is not an rpm package. Skipping."
    fi
