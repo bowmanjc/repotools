@@ -5,7 +5,7 @@
 #  Update Local Repository (update-local-repo)
 #
 #  Jason Bowman (bowmanjc)
-#  19 November 2020
+#  31 March 2023
 #
 #  Purpose: This bash script provides an easy tool to update your
 #           local repository after downloading an rpm package file.
@@ -31,28 +31,32 @@
 #           gpgcheck=0
 #           metadata_expire=60
 #
+#  Exit status: 0 if any rpm files are moved to the repo directory,
+#               2 if source directory cannot be determined, 1 otherwise
+#
 #  License: GNU GPLv3
 #
 ##################################################################
 
+STATUS=1
 OS=$(lsb_release -si | tr '[:upper:]' '[:lower:]')
 BASE="/var/www/html/"$OS"/updates"
 VER=$(lsb_release -sr)
 ARCH=$(uname -m)
 
-[ -d $BASE/$VER/$ARCH ] || mkdir -p $BASE/$VER/$ARCH
+[[ -d $BASE/$VER/$ARCH ]] || mkdir -p $BASE/$VER/$ARCH
 
-if [ -z $SUDO_USER ]
-then
-    if [ -z $HOME ]
-    then
+if [[ -z $SUDO_USER ]]; then
+    if [[ -z $HOME ]]; then
         echo "[!] Error: Unable to determine directory to retrieve rpm packages"
-        exit 1
+        exit 2
     else
         mv -v $HOME/Downloads/*.rpm $BASE/$VER/$ARCH 2> /dev/null
+        STATUS=$?
     fi
 else
     mv -v /home/$SUDO_USER/Downloads/*.rpm $BASE/$VER/$ARCH 2> /dev/null
+    STATUS=$?
 fi
 
 cd $BASE/$VER/$ARCH
@@ -60,4 +64,4 @@ chown -c root:root *.rpm
 chmod -c 644 *.rpm
 createrepo $BASE/$VER/$ARCH
 
-exit 0
+exit $STATUS

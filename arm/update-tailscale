@@ -1,0 +1,17 @@
+#!/bin/bash
+
+cd /home/bowmanjc/Downloads
+tar xzvf tailscale_*_arm64.tgz
+systemctl stop tailscaled
+
+install -p tailscale_*_arm64/tailscale /bin
+install -p tailscale_*_arm64/tailscaled /bin
+
+systemctl daemon-reload
+systemctl start tailscaled
+# systemctl status tailscaled
+
+tailscale version
+# tailscale status
+
+rm -fvr tailscale_*_arm64

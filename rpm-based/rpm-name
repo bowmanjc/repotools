@@ -5,7 +5,7 @@
 #  RPM File Rename (rpm-name)
 #
 #  Jason Bowman (bowmanjc)
-#  03 July 2022
+#  31 March 2023
 #
 #  Purpose: This bash script provides an easy tool to update
 #           rpm package filenames based on the following info
@@ -26,17 +26,23 @@
 #  Dependencies: This script requires file & rpm in order to
 #                execute.
 #
+#  Exit status: 0 if any input rpm file is renamed, 1 otherwise
+#
 #  License: GNU GPLv3
 #
 ##################################################################
 
+STATUS=1
 for rpmfile in "$@"
 do
    if [[ $(file --mime-type -b "$rpmfile") == application/x-rpm ]]; then
       # had to switch from (i)nteractive to (f)orce to use in ansible playbook
       mv -vf $rpmfile $(rpm -qp --nosignature $rpmfile).rpm
+      if [[ $? == 0 ]]; then
+         STATUS=0
+      fi
    else
       echo "[!] Warning: $rpmfile is not an rpm package. Skipping."
    fi
 done
-exit 0
+exit $STATUS
