@@ -5,7 +5,7 @@
 #  Update Local Repository (update-local-repo)
 #
 #  Jason Bowman (bowmanjc)
-#  31 March 2023
+#  02 April 2023
 #
 #  Purpose: This bash script provides an easy tool to update your
 #           local repository after downloading an rpm package file.
@@ -31,8 +31,10 @@
 #           gpgcheck=0
 #           metadata_expire=60
 #
-#  Exit status: 0 if any rpm files are moved to the repo directory,
-#               2 if source directory cannot be determined, 1 otherwise
+#  Exit status: 0 if any rpm files are added to the local repo or if
+#               createrepo generally updates local repo successfully,
+#               2 if source directory cannot be determined,
+#               1 otherwise
 #
 #  License: GNU GPLv3
 #
@@ -63,5 +65,6 @@ cd $BASE/$VER/$ARCH
 chown -c root:root *.rpm
 chmod -c 644 *.rpm
 createrepo $BASE/$VER/$ARCH
+STATUS=$?
 
 exit $STATUS
