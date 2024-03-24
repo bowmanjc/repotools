@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd /home/bowmanjc/Downloads
+# TODO: Need to do more variable checking like in update-local-repo
+cd /home/$SUDO_USER/Downloads
 tar xzvf tailscale_*_arm64.tgz
 systemctl stop tailscaled
 
