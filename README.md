@@ -11,5 +11,5 @@ update-tailscale: script to shutdown, upgrade, and restart tailscaled for ARM-ba
 update-local-repo: script to add deb packages from user's Downloads folder into a local repo
 
 ## rpm-based
-rpm-name: script to update rpm filenames based on embedded info in rpm package
+rpm-name: script to update rpm filenames based on embedded info in rpm package\\
 update-local-repo: script to add rpm packages from user's Downloads folder into a local repo
